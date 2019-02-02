@@ -3,14 +3,34 @@ const { GraphQLServer  } = require('graphql-yoga')
 // GraphQL schema definition
 const typeDefs = `
     type Query {
-        info: String!
+        projects: [Project!]!
+    }
+
+    type Project {
+        id: ID!
+        title: String!
+        description: String
+        repositoryUrl: String
+        projectUrl: String
     }
 `
+
+let projects = [{
+        id: 'project-1',
+        title: 'Example project'
+    }]
 
 // GraphQL schema implementation (same structure as typeDefs)
 const resolvers = {
     Query: {
-        info: () => 'This is the GraphQl API example'
+        projects: () => projects
+    },
+    Project: {
+        id: (parent) => parent.id,
+        title: (parent) => parent.title,
+        description: (parent) => parent.description,
+        repositoryUrl: (parent) => parent.repositoryUrl,
+        projectUrl: (parent) => parent.projectUrl
     }
 }
 
