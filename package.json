@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/lucassoamaral/learn-graphql-nodejs/issues"
   },
-  "homepage": "https://github.com/lucassoamaral/learn-graphql-nodejs#readme"
+  "homepage": "https://github.com/lucassoamaral/learn-graphql-nodejs#readme",
+  "dependencies": {
+    "graphql-yoga": "^1.17.1"
+  }
 }
