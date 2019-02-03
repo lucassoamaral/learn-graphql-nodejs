@@ -1,0 +1,15 @@
+type Query {
+    projects: [Project!]!
+}
+
+type Mutation {
+    post(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
+}
+
+type Project {
+    id: ID!
+    title: String!
+    description: String
+    repositoryUrl: String
+    projectUrl: String
+}

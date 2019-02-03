@@ -1,29 +1,27 @@
 const { GraphQLServer  } = require('graphql-yoga')
 
-// GraphQL schema definition
-const typeDefs = `
-    type Query {
-        projects: [Project!]!
-    }
+let projects = []
 
-    type Project {
-        id: ID!
-        title: String!
-        description: String
-        repositoryUrl: String
-        projectUrl: String
-    }
-`
-
-let projects = [{
-        id: 'project-1',
-        title: 'Example project'
-    }]
+let idCount = projects.length
 
 // GraphQL schema implementation (same structure as typeDefs)
 const resolvers = {
     Query: {
         projects: () => projects
+    },
+    Mutation: {
+        post: (parent, args) => {
+            const project = {
+                id: `project-${idCount++}`,
+                title: args.title,
+                description: args.description,
+                repositoryUrl: args.repositoryUrl,
+                projectUrl: args.projectUrl
+            }
+
+            projects.push(project)
+            return project
+        }
     },
     Project: {
         id: (parent) => parent.id,
@@ -36,7 +34,7 @@ const resolvers = {
 
 // Creates the server with the configured schemas and operations
 const server = new GraphQLServer ({
-    typeDefs,
+    typeDefs: './schema.graphql',
     resolvers
 })
 
