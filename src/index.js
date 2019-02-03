@@ -40,6 +40,14 @@ const resolvers = {
             }
 
             return project
+        },
+        delete: (parent, args) => {
+            var project = projects.find(item => item.id === args.id)
+            if (project) {
+                delete projects[projects.indexOf(project)]
+            }
+            
+            return project
         }
     },
     Project: {

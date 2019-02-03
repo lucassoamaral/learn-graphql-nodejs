@@ -6,7 +6,7 @@ type Query {
 type Mutation {
     create(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
     update(id: ID!, title: String, description: String, repositoryUrl: String, projectUrl: String) : Project!
-    # delete(id: ID!)
+    delete(id: ID!) : Project
 }
 
 type Project {
