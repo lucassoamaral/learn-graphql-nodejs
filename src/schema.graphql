@@ -1,5 +1,5 @@
 type Query {
-    projects(filter: String, skip: Int, first: Int, orderBy: ProjectOrderByInput) : [Project!]!
+    projects(filter: String, skip: Int, first: Int, orderBy: ProjectOrderByInput) : ProjectList!
     project(id: ID!) : Project
 }
 
@@ -26,6 +26,11 @@ type Project {
     createdBy: User
     parentProject: Project
     subprojects: [Project!]!
+}
+
+type ProjectList {
+    projects: [Project!]!
+    count: Int!
 }
 
 type AuthPayload {
