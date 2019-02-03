@@ -4,9 +4,11 @@ type Query {
 }
 
 type Mutation {
-    create(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
-    update(id: ID!, title: String, description: String, repositoryUrl: String, projectUrl: String) : Project!
-    delete(id: ID!) : Project
+    createProject(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
+    updateProject(id: ID!, title: String, description: String, repositoryUrl: String, projectUrl: String) : Project!
+    deleteProject(id: ID!) : Project
+    signup(email: String!, password: String!, name: String!) : AuthPayload
+    login(email: String!, password: String!) : AuthPayload
 }
 
 type Project {
@@ -15,4 +17,17 @@ type Project {
     description: String
     repositoryUrl: String
     projectUrl: String
+    createdBy: User
+}
+
+type AuthPayload {
+    token: String
+    user: User
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    projects: [Project!]!
 }
