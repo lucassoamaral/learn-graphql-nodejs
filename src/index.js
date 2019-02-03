@@ -4,11 +4,13 @@ const Query = require('./resolvers/query')
 const Mutation = require('./resolvers/mutation')
 const User = require('./resolvers/user')
 const Project = require('./resolvers/project')
+const Subscription = require('./resolvers/subscription')
 
 // GraphQL schema implementation (same structure as typeDefs)
 const resolvers = {
     Query,
     Mutation,
+    Subscription,
     User,
     Project
 }

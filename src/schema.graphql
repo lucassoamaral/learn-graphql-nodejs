@@ -11,6 +11,10 @@ type Mutation {
     login(email: String!, password: String!) : AuthPayload
 }
 
+type Subscription {
+    newProject: Project
+}
+
 type Project {
     id: ID!
     title: String!
