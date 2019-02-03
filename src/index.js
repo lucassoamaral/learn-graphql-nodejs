@@ -22,6 +22,24 @@ const resolvers = {
 
             projects.push(project)
             return project
+        },
+        update: (parent, args) => {
+            const project = projects.find(item => item.id === args.id)
+            if (project) {
+                if (args.title)
+                    project.title = args.title
+
+                if (args.description)
+                    project.description = args.description
+
+                if (args.repositoryUrl)
+                    project.repositoryUrl = args.repositoryUrl
+
+                if (args.projectUrl)
+                    project.projectUrl = args.projectUrl
+            }
+
+            return project
         }
     },
     Project: {
