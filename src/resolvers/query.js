@@ -3,7 +3,7 @@ function projects(root, args, context, info) {
 }
 
 function project(root, args, context, info) {
-    context.prisma.project({ id: args.id })
+    return context.prisma.project({ id: args.id })
 }
 
 module.exports = {

@@ -33,7 +33,6 @@ async function addChild(parent, args, context, info) {
     const userId = getUserId(context)
 
     const projectExists = await context.prisma.$exists.project({
-        user: { id: userId },
         id: args.parentId
     })
 
@@ -46,7 +45,7 @@ async function addChild(parent, args, context, info) {
         description: args.description,
         repositoryUrl: args.repositoryUrl,
         projectUrl: args.projectUrl,
-        user: { connect: { id: userId }},
+        createdBy: { connect: { id: userId }},
         parentProject: { connect: { id: args.parentId }}
     })
 }
