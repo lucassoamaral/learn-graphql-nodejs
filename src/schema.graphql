@@ -1,5 +1,5 @@
 type Query {
-    projects(filter: String) : [Project!]!
+    projects(filter: String, skip: Int, first: Int, orderBy: ProjectOrderByInput) : [Project!]!
     project(id: ID!) : Project
 }
 
@@ -38,4 +38,13 @@ type User {
     name: String!
     email: String!
     projects: [Project!]!
+}
+
+enum ProjectOrderByInput {
+    title_ASC,
+    title_DESC,
+    description_ASC,
+    description_DESC,
+    createdAt_ASC,
+    createdAt_DESC
 }

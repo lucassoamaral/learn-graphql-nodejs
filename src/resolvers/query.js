@@ -8,7 +8,12 @@ function projects(root, args, context, info) {
         ]
     } : {}
 
-    return context.prisma.projects({ where })
+    return context.prisma.projects({ 
+        where,
+        skip: args.skip,
+        first: args.first,
+        orderBy: args.orderBy
+    })
 }
 
 function project(root, args, context, info) {
