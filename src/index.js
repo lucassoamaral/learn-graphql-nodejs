@@ -1,53 +1,29 @@
 const { GraphQLServer  } = require('graphql-yoga')
-
-let projects = []
-
-let idCount = projects.length
+const { prisma } = require('./generated/prisma-client')
 
 // GraphQL schema implementation (same structure as typeDefs)
 const resolvers = {
     Query: {
-        projects: () => projects,
-        project: (parent, args) => projects.find(item => item.id === args.id)
+        projects: (root, args, context) => context.prisma.projects(),
+        project: (root, args, context)  => context.prisma.project({ id: args.id })
     },
     Mutation: {
-        create: (parent, args) => {
-            const project = {
-                id: `project-${idCount++}`,
+        create: (root, args, context) => {
+            return context.prisma.createProject({
                 title: args.title,
                 description: args.description,
                 repositoryUrl: args.repositoryUrl,
                 projectUrl: args.projectUrl
-            }
-
-            projects.push(project)
-            return project
+            })
         },
-        update: (parent, args) => {
-            const project = projects.find(item => item.id === args.id)
-            if (project) {
-                if (args.title)
-                    project.title = args.title
-
-                if (args.description)
-                    project.description = args.description
-
-                if (args.repositoryUrl)
-                    project.repositoryUrl = args.repositoryUrl
-
-                if (args.projectUrl)
-                    project.projectUrl = args.projectUrl
-            }
-
-            return project
+        update: (root, args, context) => {
+            return context.prisma.updateProject({
+                where: { id: args.id },
+                data: { title: args.title,  description: args.description, repositoryUrl: args.repositoryUrl, projectUrl: args.projectUrl }
+            })
         },
-        delete: (parent, args) => {
-            var project = projects.find(item => item.id === args.id)
-            if (project) {
-                delete projects[projects.indexOf(project)]
-            }
-            
-            return project
+        delete: (root, args, context) => {
+            return context.prisma.deleteProject({ id: args.id });
         }
     },
     Project: {
@@ -62,7 +38,8 @@ const resolvers = {
 // Creates the server with the configured schemas and operations
 const server = new GraphQLServer ({
     typeDefs: './schema.graphql',
-    resolvers
+    resolvers,
+    context: { prisma }
 })
 
 server.start(() => console.log('Server is running on http://localhost:4000'))
