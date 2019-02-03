@@ -5,4 +5,13 @@ type Project {
     description: String
     repositoryUrl: String
     projectUrl: String
+    createdBy: User
+}
+
+type User {
+    id: ID! @unique
+    name: String!
+    email: String! @unique
+    password: String!
+    projects: [Project!]!
 }
