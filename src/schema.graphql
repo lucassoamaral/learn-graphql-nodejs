@@ -1,9 +1,12 @@
 type Query {
     projects: [Project!]!
+    project(id: ID!) : Project
 }
 
 type Mutation {
-    post(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
+    create(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
+    # update(id: ID!, title: String, description: String, repositoryUrl: String, projectUrl: String) : Project!
+    # delete(id: ID!)
 }
 
 type Project {

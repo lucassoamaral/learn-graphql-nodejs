@@ -7,10 +7,11 @@ let idCount = projects.length
 // GraphQL schema implementation (same structure as typeDefs)
 const resolvers = {
     Query: {
-        projects: () => projects
+        projects: () => projects,
+        project: (parent, args) => projects.find(item => item.id === args.id)
     },
     Mutation: {
-        post: (parent, args) => {
+        create: (parent, args) => {
             const project = {
                 id: `project-${idCount++}`,
                 title: args.title,
