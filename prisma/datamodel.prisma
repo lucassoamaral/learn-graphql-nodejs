@@ -1,0 +1,8 @@
+type Project {
+    id: ID! @unique
+    createdAt: DateTime!
+    title: String!
+    description: String
+    repositoryUrl: String
+    projectUrl: String
+}
