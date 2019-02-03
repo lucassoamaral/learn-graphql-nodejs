@@ -254,6 +254,10 @@ export interface ProjectWhereInput {
   projectUrl_ends_with?: String;
   projectUrl_not_ends_with?: String;
   createdBy?: UserWhereInput;
+  parentProject?: ProjectWhereInput;
+  subprojects_every?: ProjectWhereInput;
+  subprojects_some?: ProjectWhereInput;
+  subprojects_none?: ProjectWhereInput;
   AND?: ProjectWhereInput[] | ProjectWhereInput;
   OR?: ProjectWhereInput[] | ProjectWhereInput;
   NOT?: ProjectWhereInput[] | ProjectWhereInput;
@@ -335,6 +339,8 @@ export interface ProjectCreateInput {
   repositoryUrl?: String;
   projectUrl?: String;
   createdBy?: UserCreateOneWithoutProjectsInput;
+  parentProject?: ProjectCreateOneWithoutSubprojectsInput;
+  subprojects?: ProjectCreateManyWithoutParentProjectInput;
 }
 
 export interface UserCreateOneWithoutProjectsInput {
@@ -348,12 +354,44 @@ export interface UserCreateWithoutProjectsInput {
   password: String;
 }
 
+export interface ProjectCreateOneWithoutSubprojectsInput {
+  create?: ProjectCreateWithoutSubprojectsInput;
+  connect?: ProjectWhereUniqueInput;
+}
+
+export interface ProjectCreateWithoutSubprojectsInput {
+  title: String;
+  description?: String;
+  repositoryUrl?: String;
+  projectUrl?: String;
+  createdBy?: UserCreateOneWithoutProjectsInput;
+  parentProject?: ProjectCreateOneWithoutSubprojectsInput;
+}
+
+export interface ProjectCreateManyWithoutParentProjectInput {
+  create?:
+    | ProjectCreateWithoutParentProjectInput[]
+    | ProjectCreateWithoutParentProjectInput;
+  connect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
+}
+
+export interface ProjectCreateWithoutParentProjectInput {
+  title: String;
+  description?: String;
+  repositoryUrl?: String;
+  projectUrl?: String;
+  createdBy?: UserCreateOneWithoutProjectsInput;
+  subprojects?: ProjectCreateManyWithoutParentProjectInput;
+}
+
 export interface ProjectUpdateInput {
   title?: String;
   description?: String;
   repositoryUrl?: String;
   projectUrl?: String;
   createdBy?: UserUpdateOneWithoutProjectsInput;
+  parentProject?: ProjectUpdateOneWithoutSubprojectsInput;
+  subprojects?: ProjectUpdateManyWithoutParentProjectInput;
 }
 
 export interface UserUpdateOneWithoutProjectsInput {
@@ -376,76 +414,66 @@ export interface UserUpsertWithoutProjectsInput {
   create: UserCreateWithoutProjectsInput;
 }
 
-export interface ProjectUpdateManyMutationInput {
+export interface ProjectUpdateOneWithoutSubprojectsInput {
+  create?: ProjectCreateWithoutSubprojectsInput;
+  update?: ProjectUpdateWithoutSubprojectsDataInput;
+  upsert?: ProjectUpsertWithoutSubprojectsInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: ProjectWhereUniqueInput;
+}
+
+export interface ProjectUpdateWithoutSubprojectsDataInput {
   title?: String;
   description?: String;
   repositoryUrl?: String;
   projectUrl?: String;
+  createdBy?: UserUpdateOneWithoutProjectsInput;
+  parentProject?: ProjectUpdateOneWithoutSubprojectsInput;
 }
 
-export interface UserCreateInput {
-  name: String;
-  email: String;
-  password: String;
-  projects?: ProjectCreateManyWithoutCreatedByInput;
+export interface ProjectUpsertWithoutSubprojectsInput {
+  update: ProjectUpdateWithoutSubprojectsDataInput;
+  create: ProjectCreateWithoutSubprojectsInput;
 }
 
-export interface ProjectCreateManyWithoutCreatedByInput {
+export interface ProjectUpdateManyWithoutParentProjectInput {
   create?:
-    | ProjectCreateWithoutCreatedByInput[]
-    | ProjectCreateWithoutCreatedByInput;
-  connect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
-}
-
-export interface ProjectCreateWithoutCreatedByInput {
-  title: String;
-  description?: String;
-  repositoryUrl?: String;
-  projectUrl?: String;
-}
-
-export interface UserUpdateInput {
-  name?: String;
-  email?: String;
-  password?: String;
-  projects?: ProjectUpdateManyWithoutCreatedByInput;
-}
-
-export interface ProjectUpdateManyWithoutCreatedByInput {
-  create?:
-    | ProjectCreateWithoutCreatedByInput[]
-    | ProjectCreateWithoutCreatedByInput;
+    | ProjectCreateWithoutParentProjectInput[]
+    | ProjectCreateWithoutParentProjectInput;
   delete?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
   connect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
   disconnect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
   update?:
-    | ProjectUpdateWithWhereUniqueWithoutCreatedByInput[]
-    | ProjectUpdateWithWhereUniqueWithoutCreatedByInput;
+    | ProjectUpdateWithWhereUniqueWithoutParentProjectInput[]
+    | ProjectUpdateWithWhereUniqueWithoutParentProjectInput;
   upsert?:
-    | ProjectUpsertWithWhereUniqueWithoutCreatedByInput[]
-    | ProjectUpsertWithWhereUniqueWithoutCreatedByInput;
+    | ProjectUpsertWithWhereUniqueWithoutParentProjectInput[]
+    | ProjectUpsertWithWhereUniqueWithoutParentProjectInput;
   deleteMany?: ProjectScalarWhereInput[] | ProjectScalarWhereInput;
   updateMany?:
     | ProjectUpdateManyWithWhereNestedInput[]
     | ProjectUpdateManyWithWhereNestedInput;
 }
 
-export interface ProjectUpdateWithWhereUniqueWithoutCreatedByInput {
+export interface ProjectUpdateWithWhereUniqueWithoutParentProjectInput {
   where: ProjectWhereUniqueInput;
-  data: ProjectUpdateWithoutCreatedByDataInput;
+  data: ProjectUpdateWithoutParentProjectDataInput;
 }
 
-export interface ProjectUpdateWithoutCreatedByDataInput {
+export interface ProjectUpdateWithoutParentProjectDataInput {
   title?: String;
   description?: String;
   repositoryUrl?: String;
   projectUrl?: String;
+  createdBy?: UserUpdateOneWithoutProjectsInput;
+  subprojects?: ProjectUpdateManyWithoutParentProjectInput;
 }
 
-export interface ProjectUpsertWithWhereUniqueWithoutCreatedByInput {
+export interface ProjectUpsertWithWhereUniqueWithoutParentProjectInput {
   where: ProjectWhereUniqueInput;
-  update: ProjectUpdateWithoutCreatedByDataInput;
-  create: ProjectCreateWithoutCreatedByInput;
+  update: ProjectUpdateWithoutParentProjectDataInput;
+  create: ProjectCreateWithoutParentProjectInput;
 }
 
 export interface ProjectScalarWhereInput {
@@ -544,6 +572,82 @@ export interface ProjectUpdateManyDataInput {
   projectUrl?: String;
 }
 
+export interface ProjectUpdateManyMutationInput {
+  title?: String;
+  description?: String;
+  repositoryUrl?: String;
+  projectUrl?: String;
+}
+
+export interface UserCreateInput {
+  name: String;
+  email: String;
+  password: String;
+  projects?: ProjectCreateManyWithoutCreatedByInput;
+}
+
+export interface ProjectCreateManyWithoutCreatedByInput {
+  create?:
+    | ProjectCreateWithoutCreatedByInput[]
+    | ProjectCreateWithoutCreatedByInput;
+  connect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
+}
+
+export interface ProjectCreateWithoutCreatedByInput {
+  title: String;
+  description?: String;
+  repositoryUrl?: String;
+  projectUrl?: String;
+  parentProject?: ProjectCreateOneWithoutSubprojectsInput;
+  subprojects?: ProjectCreateManyWithoutParentProjectInput;
+}
+
+export interface UserUpdateInput {
+  name?: String;
+  email?: String;
+  password?: String;
+  projects?: ProjectUpdateManyWithoutCreatedByInput;
+}
+
+export interface ProjectUpdateManyWithoutCreatedByInput {
+  create?:
+    | ProjectCreateWithoutCreatedByInput[]
+    | ProjectCreateWithoutCreatedByInput;
+  delete?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
+  connect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
+  disconnect?: ProjectWhereUniqueInput[] | ProjectWhereUniqueInput;
+  update?:
+    | ProjectUpdateWithWhereUniqueWithoutCreatedByInput[]
+    | ProjectUpdateWithWhereUniqueWithoutCreatedByInput;
+  upsert?:
+    | ProjectUpsertWithWhereUniqueWithoutCreatedByInput[]
+    | ProjectUpsertWithWhereUniqueWithoutCreatedByInput;
+  deleteMany?: ProjectScalarWhereInput[] | ProjectScalarWhereInput;
+  updateMany?:
+    | ProjectUpdateManyWithWhereNestedInput[]
+    | ProjectUpdateManyWithWhereNestedInput;
+}
+
+export interface ProjectUpdateWithWhereUniqueWithoutCreatedByInput {
+  where: ProjectWhereUniqueInput;
+  data: ProjectUpdateWithoutCreatedByDataInput;
+}
+
+export interface ProjectUpdateWithoutCreatedByDataInput {
+  title?: String;
+  description?: String;
+  repositoryUrl?: String;
+  projectUrl?: String;
+  parentProject?: ProjectUpdateOneWithoutSubprojectsInput;
+  subprojects?: ProjectUpdateManyWithoutParentProjectInput;
+}
+
+export interface ProjectUpsertWithWhereUniqueWithoutCreatedByInput {
+  where: ProjectWhereUniqueInput;
+  update: ProjectUpdateWithoutCreatedByDataInput;
+  create: ProjectCreateWithoutCreatedByInput;
+}
+
 export interface UserUpdateManyMutationInput {
   name?: String;
   email?: String;
@@ -593,6 +697,16 @@ export interface ProjectPromise extends Promise<Project>, Fragmentable {
   repositoryUrl: () => Promise<String>;
   projectUrl: () => Promise<String>;
   createdBy: <T = UserPromise>() => T;
+  parentProject: <T = ProjectPromise>() => T;
+  subprojects: <T = FragmentableArray<Project>>(args?: {
+    where?: ProjectWhereInput;
+    orderBy?: ProjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ProjectSubscription
@@ -605,6 +719,16 @@ export interface ProjectSubscription
   repositoryUrl: () => Promise<AsyncIterator<String>>;
   projectUrl: () => Promise<AsyncIterator<String>>;
   createdBy: <T = UserSubscription>() => T;
+  parentProject: <T = ProjectSubscription>() => T;
+  subprojects: <T = Promise<AsyncIterator<ProjectSubscription>>>(args?: {
+    where?: ProjectWhereInput;
+    orderBy?: ProjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface User {

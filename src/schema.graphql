@@ -7,12 +7,14 @@ type Mutation {
     createProject(title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
     updateProject(id: ID!, title: String, description: String, repositoryUrl: String, projectUrl: String) : Project!
     deleteProject(id: ID!) : Project
+    addChild(parentId: ID!, title: String!, description: String, repositoryUrl: String, projectUrl: String) : Project!
     signup(email: String!, password: String!, name: String!) : AuthPayload
     login(email: String!, password: String!) : AuthPayload
 }
 
 type Subscription {
-    newProject: Project
+    newProject: Project,
+    newSubproject: Project
 }
 
 type Project {
@@ -22,6 +24,8 @@ type Project {
     repositoryUrl: String
     projectUrl: String
     createdBy: User
+    parentProject: Project
+    subprojects: [Project!]!
 }
 
 type AuthPayload {

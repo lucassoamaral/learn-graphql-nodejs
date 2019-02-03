@@ -29,6 +29,28 @@ function deleteProject(parent, args, context, info) {
     return context.prisma.deleteProject({ id: args.id })
 }
 
+async function addChild(parent, args, context, info) {
+    const userId = getUserId(context)
+
+    const projectExists = await context.prisma.$exists.project({
+        user: { id: userId },
+        id: args.parentId
+    })
+
+    if (!projectExists) {
+        throw new Error(`The parent project doesn't exists: ${args.parentId}`)
+    }
+
+    return context.prisma.createProject({
+        title: args.title,
+        description: args.description,
+        repositoryUrl: args.repositoryUrl,
+        projectUrl: args.projectUrl,
+        user: { connect: { id: userId }},
+        parentProject: { connect: { id: args.parentId }}
+    })
+}
+
 async function signup(parent, args, context, info) {
     const password = await bcrypt.hash(args.password, 10)
     const user = await context.prisma.createUser({ ...args, password })
@@ -64,6 +86,7 @@ module.exports = {
     createProject,
     updateProject,
     deleteProject,
+    addChild,
     signup,
     login
 }

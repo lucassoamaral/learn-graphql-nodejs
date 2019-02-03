@@ -6,6 +6,8 @@ type Project {
     repositoryUrl: String
     projectUrl: String
     createdBy: User
+    parentProject: Project @relation(name: "Subprojects")
+    subprojects: [Project!]! @relation(name: "Subprojects")
 }
 
 type User {

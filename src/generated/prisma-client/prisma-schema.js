@@ -55,6 +55,8 @@ type Project {
   repositoryUrl: String
   projectUrl: String
   createdBy: User
+  parentProject: Project
+  subprojects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
 }
 
 type ProjectConnection {
@@ -69,6 +71,8 @@ input ProjectCreateInput {
   repositoryUrl: String
   projectUrl: String
   createdBy: UserCreateOneWithoutProjectsInput
+  parentProject: ProjectCreateOneWithoutSubprojectsInput
+  subprojects: ProjectCreateManyWithoutParentProjectInput
 }
 
 input ProjectCreateManyWithoutCreatedByInput {
@@ -76,11 +80,41 @@ input ProjectCreateManyWithoutCreatedByInput {
   connect: [ProjectWhereUniqueInput!]
 }
 
+input ProjectCreateManyWithoutParentProjectInput {
+  create: [ProjectCreateWithoutParentProjectInput!]
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectCreateOneWithoutSubprojectsInput {
+  create: ProjectCreateWithoutSubprojectsInput
+  connect: ProjectWhereUniqueInput
+}
+
 input ProjectCreateWithoutCreatedByInput {
   title: String!
   description: String
   repositoryUrl: String
   projectUrl: String
+  parentProject: ProjectCreateOneWithoutSubprojectsInput
+  subprojects: ProjectCreateManyWithoutParentProjectInput
+}
+
+input ProjectCreateWithoutParentProjectInput {
+  title: String!
+  description: String
+  repositoryUrl: String
+  projectUrl: String
+  createdBy: UserCreateOneWithoutProjectsInput
+  subprojects: ProjectCreateManyWithoutParentProjectInput
+}
+
+input ProjectCreateWithoutSubprojectsInput {
+  title: String!
+  description: String
+  repositoryUrl: String
+  projectUrl: String
+  createdBy: UserCreateOneWithoutProjectsInput
+  parentProject: ProjectCreateOneWithoutSubprojectsInput
 }
 
 type ProjectEdge {
@@ -222,6 +256,8 @@ input ProjectUpdateInput {
   repositoryUrl: String
   projectUrl: String
   createdBy: UserUpdateOneWithoutProjectsInput
+  parentProject: ProjectUpdateOneWithoutSubprojectsInput
+  subprojects: ProjectUpdateManyWithoutParentProjectInput
 }
 
 input ProjectUpdateManyDataInput {
@@ -249,9 +285,29 @@ input ProjectUpdateManyWithoutCreatedByInput {
   updateMany: [ProjectUpdateManyWithWhereNestedInput!]
 }
 
+input ProjectUpdateManyWithoutParentProjectInput {
+  create: [ProjectCreateWithoutParentProjectInput!]
+  delete: [ProjectWhereUniqueInput!]
+  connect: [ProjectWhereUniqueInput!]
+  disconnect: [ProjectWhereUniqueInput!]
+  update: [ProjectUpdateWithWhereUniqueWithoutParentProjectInput!]
+  upsert: [ProjectUpsertWithWhereUniqueWithoutParentProjectInput!]
+  deleteMany: [ProjectScalarWhereInput!]
+  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
+}
+
 input ProjectUpdateManyWithWhereNestedInput {
   where: ProjectScalarWhereInput!
   data: ProjectUpdateManyDataInput!
+}
+
+input ProjectUpdateOneWithoutSubprojectsInput {
+  create: ProjectCreateWithoutSubprojectsInput
+  update: ProjectUpdateWithoutSubprojectsDataInput
+  upsert: ProjectUpsertWithoutSubprojectsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ProjectWhereUniqueInput
 }
 
 input ProjectUpdateWithoutCreatedByDataInput {
@@ -259,6 +315,26 @@ input ProjectUpdateWithoutCreatedByDataInput {
   description: String
   repositoryUrl: String
   projectUrl: String
+  parentProject: ProjectUpdateOneWithoutSubprojectsInput
+  subprojects: ProjectUpdateManyWithoutParentProjectInput
+}
+
+input ProjectUpdateWithoutParentProjectDataInput {
+  title: String
+  description: String
+  repositoryUrl: String
+  projectUrl: String
+  createdBy: UserUpdateOneWithoutProjectsInput
+  subprojects: ProjectUpdateManyWithoutParentProjectInput
+}
+
+input ProjectUpdateWithoutSubprojectsDataInput {
+  title: String
+  description: String
+  repositoryUrl: String
+  projectUrl: String
+  createdBy: UserUpdateOneWithoutProjectsInput
+  parentProject: ProjectUpdateOneWithoutSubprojectsInput
 }
 
 input ProjectUpdateWithWhereUniqueWithoutCreatedByInput {
@@ -266,10 +342,26 @@ input ProjectUpdateWithWhereUniqueWithoutCreatedByInput {
   data: ProjectUpdateWithoutCreatedByDataInput!
 }
 
+input ProjectUpdateWithWhereUniqueWithoutParentProjectInput {
+  where: ProjectWhereUniqueInput!
+  data: ProjectUpdateWithoutParentProjectDataInput!
+}
+
+input ProjectUpsertWithoutSubprojectsInput {
+  update: ProjectUpdateWithoutSubprojectsDataInput!
+  create: ProjectCreateWithoutSubprojectsInput!
+}
+
 input ProjectUpsertWithWhereUniqueWithoutCreatedByInput {
   where: ProjectWhereUniqueInput!
   update: ProjectUpdateWithoutCreatedByDataInput!
   create: ProjectCreateWithoutCreatedByInput!
+}
+
+input ProjectUpsertWithWhereUniqueWithoutParentProjectInput {
+  where: ProjectWhereUniqueInput!
+  update: ProjectUpdateWithoutParentProjectDataInput!
+  create: ProjectCreateWithoutParentProjectInput!
 }
 
 input ProjectWhereInput {
@@ -352,6 +444,10 @@ input ProjectWhereInput {
   projectUrl_ends_with: String
   projectUrl_not_ends_with: String
   createdBy: UserWhereInput
+  parentProject: ProjectWhereInput
+  subprojects_every: ProjectWhereInput
+  subprojects_some: ProjectWhereInput
+  subprojects_none: ProjectWhereInput
   AND: [ProjectWhereInput!]
   OR: [ProjectWhereInput!]
   NOT: [ProjectWhereInput!]

@@ -7,6 +7,18 @@ const newProject = {
     resolve: payload => payload
 }
 
+function newSubprojectSubscribe(parent, args, context, info) {
+    var createdProject = context.prisma.$subscribe.project({ mutation_in: ['CREATED'] }).node()
+    if (createdProject && createdProject.parentProject)
+        return createdProject
+}
+
+const newSubproject = {
+    subscribe: newSubprojectSubscribe,
+    resolve: payload => payload
+}
+
 module.exports = {
-    newProject
+    newProject,
+    newSubproject
 }
